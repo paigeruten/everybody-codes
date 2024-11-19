@@ -1,9 +1,10 @@
 use color_eyre::eyre::eyre;
 
-use common::{file_reader, Part, Quest};
+use common::{file_reader, Part};
 
 mod common;
 mod quest01;
+mod quest02;
 
 fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
@@ -19,8 +20,9 @@ fn main() -> color_eyre::Result<()> {
         .expect("Please pass the quest number you want to run")
         .parse::<usize>()
         .expect("Quest number must be an integer");
-    let quest = match quest_number {
-        1 => quest01::Quest01,
+    let solve = match quest_number {
+        1 => quest01::solve,
+        2 => quest02::solve,
         _ => return Err(eyre!("That quest has not been solved yet.")),
     };
 
@@ -43,7 +45,7 @@ fn main() -> color_eyre::Result<()> {
                 .cloned()
                 .unwrap_or_else(|| part.default_input_path(quest_number)),
         )?;
-        let solution = quest.solve(part, input)?;
+        let solution = solve(part, input)?;
         println!("  Part {part}: {solution}");
     }
 

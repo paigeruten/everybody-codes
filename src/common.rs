@@ -1,7 +1,7 @@
 use std::{
     fmt::Display,
     fs::File,
-    io::{BufReader, Read},
+    io::{BufRead, BufReader},
 };
 
 #[derive(Copy, Clone)]
@@ -50,11 +50,7 @@ impl TryFrom<usize> for Part {
     }
 }
 
-pub trait Quest {
-    fn solve(&self, part: Part, input: impl Read) -> color_eyre::Result<impl Display>;
-}
-
-pub fn file_reader(path: &str) -> color_eyre::Result<impl Read> {
+pub fn file_reader(path: &str) -> color_eyre::Result<impl BufRead> {
     Ok(BufReader::new(File::open(path)?))
 }
 
