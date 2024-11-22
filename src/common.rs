@@ -4,7 +4,7 @@ use std::{
     io::{BufRead, BufReader},
 };
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 pub enum Part {
     One,
     Two,
