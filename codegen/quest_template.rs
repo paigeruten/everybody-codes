@@ -1,8 +1,8 @@
 use std::io::BufRead;
 
-use crate::common::Part;
+use crate::common::{Config, Part};
 
-pub fn solve(part: Part, input: impl BufRead) -> color_eyre::Result<String> {
+pub fn solve(part: Part, input: impl BufRead, config: &Config) -> color_eyre::Result<String> {
     let solution = match part {
         Part::One => "todo",
         Part::Two => "todo",
@@ -13,49 +13,51 @@ pub fn solve(part: Part, input: impl BufRead) -> color_eyre::Result<String> {
 
 #[cfg(test)]
 mod tests {
-    use super::solve;
-    use crate::common::{file_reader, Part};
+    use super::*;
+    use crate::common::file_reader;
     use std::io::Cursor;
+
+    const CONFIG: Config = Config::test();
 
     #[test]
     #[ignore = "todo"]
     fn solve_part_one_example() {
-        let input = Cursor::new(b"");
-        assert_eq!("", solve(Part::One, input).unwrap());
+        let input = Cursor::new("");
+        assert_eq!("", solve(Part::One, input, &CONFIG).unwrap());
     }
 
     #[test]
     #[ignore = "todo"]
     fn solve_part_one() {
         let input = file_reader("notes/q{{quest_num_padded}}p01").unwrap();
-        assert_eq!("", solve(Part::One, input).unwrap());
+        assert_eq!("", solve(Part::One, input, &CONFIG).unwrap());
     }
 
     #[test]
     #[ignore = "todo"]
     fn solve_part_two_example() {
         let input = Cursor::new(b"");
-        assert_eq!("", solve(Part::Two, input).unwrap());
+        assert_eq!("", solve(Part::Two, input, &CONFIG).unwrap());
     }
 
     #[test]
     #[ignore = "todo"]
     fn solve_part_two() {
         let input = file_reader("notes/q{{quest_num_padded}}p02").unwrap();
-        assert_eq!("", solve(Part::Two, input).unwrap());
+        assert_eq!("", solve(Part::Two, input, &CONFIG).unwrap());
     }
 
     #[test]
     #[ignore = "todo"]
     fn solve_part_three_example() {
         let input = Cursor::new(b"");
-        assert_eq!("", solve(Part::Three, input).unwrap());
+        assert_eq!("", solve(Part::Three, input, &CONFIG).unwrap());
     }
 
     #[test]
     #[ignore = "todo"]
     fn solve_part_three() {
         let input = file_reader("notes/q{{quest_num_padded}}p03").unwrap();
-        assert_eq!("", solve(Part::Three, input).unwrap());
+        assert_eq!("", solve(Part::Three, input, &CONFIG).unwrap());
     }
 }

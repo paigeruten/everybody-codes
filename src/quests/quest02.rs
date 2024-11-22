@@ -1,8 +1,8 @@
 use std::{collections::HashSet, io::BufRead};
 
-use crate::common::Part;
+use crate::common::{Config, Part};
 
-pub fn solve(part: Part, input: impl BufRead) -> color_eyre::Result<String> {
+pub fn solve(part: Part, input: impl BufRead, _config: &Config) -> color_eyre::Result<String> {
     let (wordlist, inscription) = parse_input(input)?;
     Ok(match part {
         Part::One => count_words(&wordlist, &inscription).to_string(),
@@ -114,9 +114,11 @@ fn directional_index(x: i32, y: i32, direction: (i32, i32), idx: usize, width: i
 
 #[cfg(test)]
 mod tests {
-    use super::solve;
-    use crate::common::{file_reader, Part};
+    use super::*;
+    use crate::common::file_reader;
     use std::io::Cursor;
+
+    const CONFIG: Config = Config::test();
 
     #[test]
     fn solve_part_one_example() {
@@ -125,13 +127,13 @@ mod tests {
             "\n",
             "AWAKEN THE POWER ADORNED WITH THE FLAMES BRIGHT IRE\n"
         ));
-        assert_eq!("4", solve(Part::One, input).unwrap());
+        assert_eq!("4", solve(Part::One, input, &CONFIG).unwrap());
     }
 
     #[test]
     fn solve_part_one() {
         let input = file_reader("notes/q02p01").unwrap();
-        assert_eq!("33", solve(Part::One, input).unwrap());
+        assert_eq!("33", solve(Part::One, input, &CONFIG).unwrap());
     }
 
     #[test]
@@ -145,13 +147,13 @@ mod tests {
             "THERE IS THE END\n",
             "QAQAQ\n",
         ));
-        assert_eq!("42", solve(Part::Two, input).unwrap());
+        assert_eq!("42", solve(Part::Two, input, &CONFIG).unwrap());
     }
 
     #[test]
     fn solve_part_two() {
         let input = file_reader("notes/q02p02").unwrap();
-        assert_eq!("5280", solve(Part::Two, input).unwrap());
+        assert_eq!("5280", solve(Part::Two, input, &CONFIG).unwrap());
     }
 
     #[test]
@@ -163,12 +165,12 @@ mod tests {
             "ENIGWDXL\n",
             "TRODEOAL\n",
         ));
-        assert_eq!("10", solve(Part::Three, input).unwrap());
+        assert_eq!("10", solve(Part::Three, input, &CONFIG).unwrap());
     }
 
     #[test]
     fn solve_part_three() {
         let input = file_reader("notes/q02p03").unwrap();
-        assert_eq!("11667", solve(Part::Three, input).unwrap());
+        assert_eq!("11667", solve(Part::Three, input, &CONFIG).unwrap());
     }
 }

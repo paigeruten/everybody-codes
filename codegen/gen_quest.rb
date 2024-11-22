@@ -8,11 +8,18 @@ QUESTS_PATH = "#{SRC_PATH}/quests.rs"
 QUESTS_TEMPLATE = <<-TEMPLATE
 use std::io::BufRead;
 
-use crate::common::Part;
+use crate::common::{Config, Part};
 
 {{modules}}
 
-pub fn solve(quest_number: usize, part: Part, input: impl BufRead) -> color_eyre::Result<String> {
+pub const NUM_QUESTS: usize = {{num_quests}};
+
+pub fn solve(
+    quest_number: usize,
+    part: Part,
+    input: impl BufRead,
+    config: &Config,
+) -> color_eyre::Result<String> {
     match quest_number {
 {{match_arms}}
         _ => Err(color_eyre::eyre::eyre!(
@@ -47,12 +54,19 @@ existing_quests = Dir["#{SRC_PATH}/quests/quest??.rs"].map do |path|
   File.basename(path, ".rs")[5..6]
 end
 
+num_quests = existing_quests.map(&:to_i).max
+if existing_quests.map(&:to_i).sort != (1..num_quests).to_a
+  puts "Error: Quests do not consecutively increase from 1"
+  exit 1
+end
+
 quests_modules = existing_quests.map { |quest_num| "mod quest#{quest_num};"}.join("\n")
 quests_match_arms = existing_quests.map do |quest_num|
-  "        #{quest_num.to_i} => quest#{quest_num}::solve(part, input),"
+  "        #{quest_num.to_i} => quest#{quest_num}::solve(part, input, config),"
 end.join("\n")
 
 quests_content = QUESTS_TEMPLATE
+  .sub('{{num_quests}}', existing_quests.map(&:to_i).max.to_s)
   .sub('{{modules}}', quests_modules)
   .sub('{{match_arms}}', quests_match_arms)
 

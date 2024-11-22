@@ -1,20 +1,29 @@
 use std::{fmt::Display, io::BufRead};
 
-use crate::common::Part;
+use crate::common::{Config, Part};
 
-pub fn solve(part: Part, input: impl BufRead) -> color_eyre::Result<String> {
-    let mut depth_map = DepthMap::try_parse(input)?;
+pub fn solve(part: Part, input: impl BufRead, config: &Config) -> color_eyre::Result<String> {
+    let mut depth_map = DepthMap::parse(input)?;
     if part == Part::Three {
         depth_map.set_diagonal_neighbours(true);
     }
 
-    println!("{depth_map}");
-    depth_map.trim();
-    println!("{depth_map}");
-
-    while depth_map.dig() > 0 {
+    if config.verbose {
         println!("{depth_map}");
     }
+
+    depth_map.trim();
+
+    if config.verbose {
+        println!("{depth_map}");
+    }
+
+    while depth_map.dig() > 0 {
+        if config.verbose {
+            println!("{depth_map}");
+        }
+    }
+
     Ok(format!("{}", depth_map.sum()))
 }
 
@@ -36,7 +45,7 @@ impl DepthMap {
         self.diagonal_neighbours = diagonal_neighbours;
     }
 
-    pub fn try_parse(mut input: impl BufRead) -> color_eyre::Result<Self> {
+    pub fn parse(mut input: impl BufRead) -> color_eyre::Result<Self> {
         let mut map = Vec::new();
 
         let mut line = String::new();
@@ -162,8 +171,10 @@ impl Display for DepthMap {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::common::{file_reader, Part};
+    use crate::common::file_reader;
     use std::io::Cursor;
+
+    const CONFIG: Config = Config::test();
 
     #[test]
     fn depth_map_trim() {
@@ -200,19 +211,19 @@ mod tests {
             "...####...\n",
             "..........\n"
         ));
-        assert_eq!("35", solve(Part::One, input).unwrap());
+        assert_eq!("35", solve(Part::One, input, &CONFIG).unwrap());
     }
 
     #[test]
     fn solve_part_one() {
         let input = file_reader("notes/q03p01").unwrap();
-        assert_eq!("120", solve(Part::One, input).unwrap());
+        assert_eq!("120", solve(Part::One, input, &CONFIG).unwrap());
     }
 
     #[test]
     fn solve_part_two() {
         let input = file_reader("notes/q03p02").unwrap();
-        assert_eq!("2712", solve(Part::Two, input).unwrap());
+        assert_eq!("2712", solve(Part::Two, input, &CONFIG).unwrap());
     }
 
     #[test]
@@ -226,12 +237,12 @@ mod tests {
             "...####...\n",
             "..........\n"
         ));
-        assert_eq!("29", solve(Part::Three, input).unwrap());
+        assert_eq!("29", solve(Part::Three, input, &CONFIG).unwrap());
     }
 
     #[test]
     fn solve_part_three() {
         let input = file_reader("notes/q03p03").unwrap();
-        assert_eq!("10336", solve(Part::Three, input).unwrap());
+        assert_eq!("10336", solve(Part::Three, input, &CONFIG).unwrap());
     }
 }

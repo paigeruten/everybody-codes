@@ -1,14 +1,14 @@
 use std::io::BufRead;
 
-use crate::common::Part;
+use crate::common::{Config, Part};
 
-pub fn solve(part: Part, input: impl BufRead) -> color_eyre::Result<String> {
-    let solution = match part {
-        Part::One => count_potions(parse_battles(input, 1)),
-        Part::Two => count_potions(parse_battles(input, 2)),
-        Part::Three => count_potions(parse_battles(input, 3)),
+pub fn solve(part: Part, input: impl BufRead, _config: &Config) -> color_eyre::Result<String> {
+    let battles = match part {
+        Part::One => parse_battles(input, 1),
+        Part::Two => parse_battles(input, 2),
+        Part::Three => parse_battles(input, 3),
     };
-    Ok(format!("{solution}"))
+    Ok(format!("{}", count_potions(battles)))
 }
 
 fn count_potions(battles: impl Iterator<Item = Battle>) -> usize {
@@ -90,43 +90,45 @@ impl Enemy {
 
 #[cfg(test)]
 mod tests {
-    use super::solve;
-    use crate::common::{file_reader, Part};
+    use super::*;
+    use crate::common::file_reader;
     use std::io::Cursor;
+
+    const CONFIG: Config = Config::test();
 
     #[test]
     fn solve_part_one_example() {
-        let input = Cursor::new(b"ABBAC");
-        assert_eq!("5", solve(Part::One, input).unwrap());
+        let input = Cursor::new("ABBAC");
+        assert_eq!("5", solve(Part::One, input, &CONFIG).unwrap());
     }
 
     #[test]
     fn solve_part_one() {
         let input = file_reader("notes/q01p01").unwrap();
-        assert_eq!("1328", solve(Part::One, input).unwrap());
+        assert_eq!("1328", solve(Part::One, input, &CONFIG).unwrap());
     }
 
     #[test]
     fn solve_part_two_example() {
-        let input = Cursor::new(b"AxBCDDCAxD");
-        assert_eq!("28", solve(Part::Two, input).unwrap());
+        let input = Cursor::new("AxBCDDCAxD");
+        assert_eq!("28", solve(Part::Two, input, &CONFIG).unwrap());
     }
 
     #[test]
     fn solve_part_two() {
         let input = file_reader("notes/q01p02").unwrap();
-        assert_eq!("5626", solve(Part::Two, input).unwrap());
+        assert_eq!("5626", solve(Part::Two, input, &CONFIG).unwrap());
     }
 
     #[test]
     fn solve_part_three_example() {
-        let input = Cursor::new(b"xBxAAABCDxCC");
-        assert_eq!("30", solve(Part::Three, input).unwrap());
+        let input = Cursor::new("xBxAAABCDxCC");
+        assert_eq!("30", solve(Part::Three, input, &CONFIG).unwrap());
     }
 
     #[test]
     fn solve_part_three() {
         let input = file_reader("notes/q01p03").unwrap();
-        assert_eq!("27565", solve(Part::Three, input).unwrap());
+        assert_eq!("27565", solve(Part::Three, input, &CONFIG).unwrap());
     }
 }

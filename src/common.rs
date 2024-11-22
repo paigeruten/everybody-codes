@@ -50,6 +50,17 @@ impl TryFrom<usize> for Part {
     }
 }
 
+pub struct Config {
+    pub verbose: bool,
+}
+
+impl Config {
+    #[cfg(test)]
+    pub const fn test() -> Self {
+        Self { verbose: true }
+    }
+}
+
 pub fn file_reader(path: &str) -> color_eyre::Result<impl BufRead> {
     Ok(BufReader::new(File::open(path)?))
 }
