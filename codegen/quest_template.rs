@@ -36,7 +36,7 @@ mod tests {
     #[test]
     #[ignore = "todo"]
     fn solve_part_two_example() {
-        let input = Cursor::new(b"");
+        let input = Cursor::new("");
         assert_eq!("", solve(Part::Two, input, &CONFIG).unwrap());
     }
 
@@ -50,7 +50,7 @@ mod tests {
     #[test]
     #[ignore = "todo"]
     fn solve_part_three_example() {
-        let input = Cursor::new(b"");
+        let input = Cursor::new("");
         assert_eq!("", solve(Part::Three, input, &CONFIG).unwrap());
     }
 
